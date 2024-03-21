@@ -1,4 +1,4 @@
-from tkinter import Tk, BOTH, Canvas
+from tkinter import Tk, BOTH, Canvas, IntVar
 
 
 class Window:
@@ -21,6 +21,12 @@ class Window:
     def redraw(self):
         self._root.update_idletasks()
         self._root.update()
+
+    def pause(self, time):
+        ms = int(time * 1000)
+        var = IntVar(self._root)
+        self._root.after(ms, lambda: var.set(1))
+        self._root.wait_variable(var)
 
     def wait_for_close(self):
         self._running = True
