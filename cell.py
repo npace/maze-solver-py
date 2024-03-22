@@ -53,3 +53,16 @@ class Cell:
         if undo:
             color = color_path_undo
         self._window.draw_line(Line(self.center, to_cell.center), color)
+
+    def __repr__(self):
+        walls = []
+        if self.has_left_wall:
+            walls.append("Left")
+        if self.has_top_wall:
+            walls.append("Top")
+        if self.has_right_wall:
+            walls.append("Right")
+        if self.has_bottom_wall:
+            walls.append("Bottom")
+
+        return f"Cell([x1: {self.x1}, y1: {self.y1}], [x2: {self.x2}, y2: {self.y2}]) with walls: [{','.join(walls)}]"
