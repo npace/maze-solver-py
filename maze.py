@@ -24,8 +24,7 @@ class Maze:
         self._create_cells()
 
     def _create_cells(self):
-        cells = []
-        self._cells = cells
+        self._cells = []
         x = self._x
         y = self._y
         size = self._cell_size
@@ -35,11 +34,11 @@ class Maze:
                 cell = Cell(x, x + size, y, y + size, self._win)
                 column.append(cell)
                 y += size
-            cells.append(column)
+            self._cells.append(column)
             x += size
             y = self._y
 
-        for column in cells:
+        for column in self._cells:
             for cell in column:
                 self._draw_cell(cell)
 
