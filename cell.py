@@ -44,16 +44,18 @@ class Cell:
         self._draw_line(self._bottom_left, self._bottom_right, self.has_bottom_wall)
 
     def _draw_line(self, point_a, point_b, draw):
-        color = color_wall
-        if not draw:
-            color = color_background
-        self._window.draw_line(Line(point_a, point_b), color)
+        if self._window:
+            color = color_wall
+            if not draw:
+                color = color_background
+            self._window.draw_line(Line(point_a, point_b), color)
 
     def draw_move(self, to_cell, undo=False):
-        color = color_path
-        if undo:
-            color = color_path_undo
-        self._window.draw_line(Line(self.center, to_cell.center), color)
+        if self._window:
+            color = color_path
+            if undo:
+                color = color_path_undo
+            self._window.draw_line(Line(self.center, to_cell.center), color)
 
     def __repr__(self):
         walls = []
