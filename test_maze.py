@@ -108,7 +108,6 @@ class MazeTest(unittest.TestCase):
     def _assertWallsBreak(self, maze, pos_a, pos_b, get_wall_a, get_wall_b):
         cell_a = maze._cell_at(pos_a)
         cell_b = maze._cell_at(pos_b)
-        print(f"assetWallsBreak cell a {cell_a}, b {cell_b}")
         self.assertEqual(get_wall_a(cell_a), True)
         self.assertEqual(get_wall_b(cell_b), True)
 
