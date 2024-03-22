@@ -23,13 +23,99 @@ class MazeTest(unittest.TestCase):
 
     def test_entrance_exit_walls(self):
         maze = Maze(0, 0, 2, 2, 10)
+
+        maze.generate_paths()
+
         first_cell = maze._cells[0][0]
         last_cell = maze._cells[1][1]
-
         self.assertEqual(first_cell.has_top_wall, False)
         self.assertEqual(first_cell.has_left_wall, True)
         self.assertEqual(last_cell.has_bottom_wall, False)
         self.assertEqual(last_cell.has_right_wall, True)
+
+    def test_adjacent_cells(self):
+        maze = Maze(0, 0, 3, 3, 10)
+
+        adjacent_of_center = maze._adjacent_cells(1, 1)
+        self.assertEqual(
+            [
+                (0, 1),
+                (2, 1),
+                (1, 0),
+                (1, 2),
+            ],
+            adjacent_of_center,
+        )
+
+        adjacent_of_top_left = maze._adjacent_cells(0, 0)
+        self.assertEqual(
+            [
+                (1, 0),
+                (0, 1),
+            ],
+            adjacent_of_top_left,
+        )
+
+        adjacent_of_bottom_right = maze._adjacent_cells(2, 2)
+        self.assertEqual([(1, 2), (2, 1)], adjacent_of_bottom_right)
+
+    def test_break_wall_between_invalid_indices(self):
+        maze = Maze(0, 0, 2, 2, 10)
+
+        with self.assertRaises(IndexError):
+            maze._break_walls_between((-1, -1), (3, 3))
+
+        with self.assertRaises(ValueError):
+            maze._break_walls_between((1, 1), (1, 1))
+
+    def test_break_walls_between(self):
+        maze = Maze(0, 0, 2, 2, 10)
+        self._assertWallsBreak(
+            maze,
+            (0, 0),
+            (0, 1),
+            lambda c1: c1.has_bottom_wall,
+            lambda c2: c2.has_top_wall,
+        )
+
+        maze = Maze(0, 0, 2, 2, 10)
+        self._assertWallsBreak(
+            maze,
+            (0, 0),
+            (1, 0),
+            lambda c1: c1.has_right_wall,
+            lambda c2: c2.has_left_wall,
+        )
+
+        maze = Maze(0, 0, 2, 2, 10)
+        self._assertWallsBreak(
+            maze,
+            (1, 0),
+            (1, 1),
+            lambda c1: c1.has_bottom_wall,
+            lambda c2: c2.has_top_wall,
+        )
+
+        maze = Maze(0, 0, 2, 2, 10)
+        self._assertWallsBreak(
+            maze,
+            (0, 1),
+            (1, 1),
+            lambda c1: c1.has_right_wall,
+            lambda c2: c2.has_left_wall,
+        )
+
+    def _assertWallsBreak(self, maze, pos_a, pos_b, get_wall_a, get_wall_b):
+        cell_a = maze._cell_at(pos_a)
+        cell_b = maze._cell_at(pos_b)
+        print(f"assetWallsBreak cell a {cell_a}, b {cell_b}")
+        self.assertEqual(get_wall_a(cell_a), True)
+        self.assertEqual(get_wall_b(cell_b), True)
+
+        maze._break_walls_between(pos_a, pos_b)
+
+        self.assertEqual(get_wall_a(cell_a), False)
+        self.assertEqual(get_wall_b(cell_b), False)
 
     def test_cell_positions(self):
         cols = 3
