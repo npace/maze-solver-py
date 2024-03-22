@@ -1,4 +1,11 @@
-from graphics import Window, Line, Point
+from graphics import (
+    Line,
+    Point,
+    color_background,
+    color_wall,
+    color_path,
+    color_path_undo,
+)
 
 
 class Cell:
@@ -30,21 +37,19 @@ class Cell:
         self.has_bottom_wall = has_bottom_wall
 
     def draw(self):
-        if self.has_left_wall:
-            self._draw_line(self._top_left, self._bottom_left)
-        if self.has_top_wall:
-            self._draw_line(self._top_left, self._top_right)
-        if self.has_right_wall:
-            self._draw_line(self._top_right, self._bottom_right)
-        if self.has_bottom_wall:
-            self._draw_line(self._bottom_left, self._bottom_right)
+        self._draw_line(self._top_left, self._bottom_left, self.has_left_wall)
+        self._draw_line(self._top_left, self._top_right, self.has_top_wall)
+        self._draw_line(self._top_right, self._bottom_right, self.has_right_wall)
+        self._draw_line(self._bottom_left, self._bottom_right, self.has_bottom_wall)
 
-    def _draw_line(self, point_a, point_b):
-        self._window.draw_line(Line(point_a, point_b), "black")
+    def _draw_line(self, point_a, point_b, draw):
+        color = color_wall
+        if not draw:
+            color = color_background
+        self._window.draw_line(Line(point_a, point_b), color)
 
     def draw_move(self, to_cell, undo=False):
+        color = color_path
         if undo:
-            color = "grey"
-        else:
-            color = "red"
+            color = color_path_undo
         self._window.draw_line(Line(self.center, to_cell.center), color)

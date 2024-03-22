@@ -1,5 +1,10 @@
 from tkinter import Tk, BOTH, Canvas, IntVar, BooleanVar
 
+color_background = "#323232"
+color_wall = "black"
+color_path = "red"
+color_path_undo = "grey"
+
 
 class Window:
     def __init__(self, width, height) -> None:
@@ -10,7 +15,9 @@ class Window:
         self._root.title("Maze Solver")
         self._root.protocol("WM_DELETE_WINDOW", self.close)
 
-        self._canvas = Canvas(master=self._root, height=height, width=width)
+        self._canvas = Canvas(
+            master=self._root, height=height, width=width, background=color_background
+        )
         self._canvas.pack()
 
         self._running = BooleanVar(self._root, False)
