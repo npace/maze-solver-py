@@ -14,6 +14,10 @@ class Cell:
         has_top_wall=True,
         has_bottom_wall=True,
     ) -> None:
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
         self._top_left = Point(x1, y1)
         self._bottom_left = Point(x1, y2)
         self._top_right = Point(x2, y1)
