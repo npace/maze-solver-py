@@ -31,6 +31,32 @@ class Maze:
             for cell in column:
                 cell.visited = False
 
+    def solve(self):
+        return self._solve_r(0, 0)
+
+    def _solve_r(self, i, j):
+        self._animate()
+        pos = (i, j)
+        cell = self._cell_at(pos)
+        cell.visited = True
+
+        is_end_cell = i == len(self._cells) - 1 and j == len(self._cells[0]) - 1
+        if is_end_cell:
+            return True
+
+        adjacent_cells = self._adjacent_cells(i, j)
+        for next_cell_pos in adjacent_cells:
+            next_cell = self._cell_at(next_cell_pos)
+            if not next_cell.visited and self._no_walls_between(pos, next_cell_pos):
+                cell.draw_move(next_cell)
+                solved = self._solve_r(*next_cell_pos)
+                if solved:
+                    return True
+                else:
+                    cell.draw_move(next_cell, undo=True)
+
+        return False
+
     def _create_cells(self):
         self._cells = []
         x = self._x
@@ -70,10 +96,8 @@ class Maze:
                 self._draw_cell(current_cell)
                 return
             next_cell_pos = random.choice(to_visit)
-            next_i = next_cell_pos[0]
-            next_j = next_cell_pos[1]
             self._break_walls_between((i, j), next_cell_pos)
-            self._break_walls_r(next_i, next_j)
+            self._break_walls_r(*next_cell_pos)
 
     def _cell_at(self, cell_pos):
         return self._cells[cell_pos[0]][cell_pos[1]]
@@ -81,18 +105,34 @@ class Maze:
     def _break_walls_between(self, cell_a_pos, cell_b_pos):
         cell_a = self._cell_at(cell_a_pos)
         cell_b = self._cell_at(cell_b_pos)
-        if cell_a.y2 == cell_b.y1:
+        if cell_a.is_above(cell_b):
             cell_a.has_bottom_wall = False
             cell_b.has_top_wall = False
-        elif cell_a.x2 == cell_b.x1:
+        elif cell_a.is_left_of(cell_b):
             cell_a.has_right_wall = False
             cell_b.has_left_wall = False
-        elif cell_a.y1 == cell_b.y2:
+        elif cell_a.is_below(cell_b):
             cell_a.has_top_wall = False
             cell_b.has_bottom_wall = False
-        elif cell_a.x1 == cell_b.x2:
+        elif cell_a.is_right_of(cell_b):
             cell_a.has_left_wall = False
             cell_b.has_right_wall = False
+        else:
+            raise ValueError(
+                f"Couldn't break walls between\n{cell_a} at {cell_a_pos} and\n{cell_b} at {cell_b_pos}"
+            )
+
+    def _no_walls_between(self, cell_a_pos, cell_b_pos):
+        cell_a = self._cell_at(cell_a_pos)
+        cell_b = self._cell_at(cell_b_pos)
+        if cell_a.is_above(cell_b):
+            return not cell_a.has_bottom_wall and not cell_b.has_top_wall
+        elif cell_a.is_left_of(cell_b):
+            return not cell_a.has_right_wall and not cell_b.has_left_wall
+        elif cell_a.is_below(cell_b):
+            return not cell_a.has_top_wall and not cell_b.has_bottom_wall
+        elif cell_a.is_right_of(cell_b):
+            return not cell_a.has_left_wall and not cell_b.has_right_wall
         else:
             raise ValueError(
                 f"Couldn't break walls between\n{cell_a} at {cell_a_pos} and\n{cell_b} at {cell_b_pos}"
@@ -111,7 +151,10 @@ class Maze:
         return adjacent_cells
 
     def _draw_cell(self, cell):
+        cell.draw()
+        self._animate()
+
+    def _animate(self):
         if self._win:
-            cell.draw()
             self._win.redraw()
             self._win.pause(0.005)

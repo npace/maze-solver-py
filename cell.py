@@ -57,6 +57,18 @@ class Cell:
                 color = color_path_undo
             self._window.draw_line(Line(self.center, to_cell.center), color)
 
+    def is_above(self, other_cell):
+        return self.y2 == other_cell.y1
+
+    def is_left_of(self, other_cell):
+        return self.x2 == other_cell.x1
+
+    def is_below(self, other_cell):
+        return self.y1 == other_cell.y2
+
+    def is_right_of(self, other_cell):
+        return self.x1 == other_cell.x2
+
     def __repr__(self):
         walls = []
         if self.has_left_wall:

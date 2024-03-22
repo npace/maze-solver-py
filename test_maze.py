@@ -68,6 +68,15 @@ class MazeTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             maze._break_walls_between((1, 1), (1, 1))
 
+    def test_no_walls_between_invalid_indices(self):
+        maze = Maze(0, 0, 2, 2, 10)
+
+        with self.assertRaises(IndexError):
+            maze._no_walls_between((-1, -1), (3, 3))
+
+        with self.assertRaises(ValueError):
+            maze._no_walls_between((1, 1), (1, 1))
+
     def test_break_walls_between(self):
         maze = Maze(0, 0, 2, 2, 10)
         self._assertWallsBreak(
@@ -115,6 +124,7 @@ class MazeTest(unittest.TestCase):
 
         self.assertEqual(get_wall_a(cell_a), False)
         self.assertEqual(get_wall_b(cell_b), False)
+        self.assertTrue(maze._no_walls_between(pos_a, pos_b))
 
     def test_cell_positions(self):
         cols = 3
