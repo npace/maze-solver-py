@@ -1,4 +1,4 @@
-from tkinter import Tk, BOTH, Canvas, IntVar
+from tkinter import Tk, BOTH, Canvas, IntVar, BooleanVar
 
 
 class Window:
@@ -13,7 +13,7 @@ class Window:
         self._canvas = Canvas(master=self._root, height=height, width=width)
         self._canvas.pack()
 
-        self._running = False
+        self._running = BooleanVar(self._root, False)
 
     def draw_line(self, line, fill_color):
         line.draw(self._canvas, fill_color)
@@ -29,12 +29,11 @@ class Window:
         self._root.wait_variable(var)
 
     def wait_for_close(self):
-        self._running = True
-        while self._running:
-            self.redraw()
+        self._running.set(True)
+        self._root.wait_variable(self._running)
 
     def close(self):
-        self._running = False
+        self._running.set(False)
 
 
 class Point:
