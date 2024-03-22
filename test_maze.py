@@ -136,3 +136,11 @@ class MazeTest(unittest.TestCase):
         self.assertEqual(cell.y1, y1)
         self.assertEqual(cell.x2, x2)
         self.assertEqual(cell.y2, y2)
+
+    def test_cells_visited_reset_after_generation(self):
+        maze = Maze(0, 0, 2, 2, 10)
+        maze.generate_paths()
+
+        for row in maze._cells:
+            for cell in row:
+                self.assertEqual(cell.visited, False)

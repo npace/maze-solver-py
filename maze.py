@@ -46,6 +46,10 @@ class Maze:
         self._break_entrance_and_exit()
         self._break_walls_r(0, 0)
 
+        for column in self._cells:
+            for cell in column:
+                cell.visited = False
+
     def _break_entrance_and_exit(self):
         first_cell = self._cells[0][0]
         last_cell = self._cells[len(self._cells) - 1][len(self._cells[0]) - 1]
