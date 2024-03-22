@@ -33,10 +33,18 @@ class Maze:
             x += size
             y = self._y
 
+        self._break_entrance_and_exit()
+
         if self._win:
             for column in cells:
                 for cell in column:
                     self._draw_cell(cell)
+
+    def _break_entrance_and_exit(self):
+        first_cell = self._cells[0][0]
+        last_cell = self._cells[len(self._cells) - 1][len(self._cells[0]) - 1]
+        first_cell.has_top_wall = False
+        last_cell.has_bottom_wall = False
 
     def _draw_cell(self, cell):
         cell.draw()

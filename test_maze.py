@@ -21,6 +21,16 @@ class MazeTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             Maze(0, 0, 10, 10, 0)
 
+    def test_entrance_exit_walls(self):
+        maze = Maze(0, 0, 2, 2, 10)
+        first_cell = maze._cells[0][0]
+        last_cell = maze._cells[1][1]
+
+        self.assertEqual(first_cell.has_top_wall, False)
+        self.assertEqual(first_cell.has_left_wall, True)
+        self.assertEqual(last_cell.has_bottom_wall, False)
+        self.assertEqual(last_cell.has_right_wall, True)
+
     def test_cell_positions(self):
         cols = 3
         rows = 3
