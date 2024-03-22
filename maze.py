@@ -23,6 +23,14 @@ class Maze:
         self._win = win
         self._create_cells()
 
+    def generate_paths(self):
+        self._break_entrance_and_exit()
+        self._break_walls_r(0, 0)
+
+        for column in self._cells:
+            for cell in column:
+                cell.visited = False
+
     def _create_cells(self):
         self._cells = []
         x = self._x
@@ -41,14 +49,6 @@ class Maze:
         for column in self._cells:
             for cell in column:
                 self._draw_cell(cell)
-
-    def generate_paths(self):
-        self._break_entrance_and_exit()
-        self._break_walls_r(0, 0)
-
-        for column in self._cells:
-            for cell in column:
-                cell.visited = False
 
     def _break_entrance_and_exit(self):
         first_cell = self._cells[0][0]
